@@ -13,37 +13,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout CODE
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
-      - name: Git Semantic Version
-        uses: PaulHatch/semantic-version@v4.0.3
-        with:
-          major_payttern: 'major:'
-          minor_payttern: 'feat:'
-          format: "${major}.${minor}.${patch}-prerelease${increment}"
-        id: version
+    - name: Git Semantic Version
+      uses: PaulHatch/semantic-version@v4.0.3
+      with:
+        major_pattern: "major:"
+        minor_pattern: "feat:"
+        format: "${major}.${minor}.${patch}-prerelease${increment}"
+      id: version
 
-      - name: Docker LOGIN
-        env:
-          DOCKER_USER: ${{ secrets.DOCKER_USER }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: |
-          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+    - name: Docker Login
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Docker Image
-        env:
-          NEW_VERSION: ${{ steps.version.outputs.version }}
+      run: |
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
 
-        run: |
-          docker build -t delta27222/docker-graphql:$NEW_VERSION .
-          docker build -t delta27222/docker-graphql .
+    - name: Build Docker Image
+      env:
+        NEW_VERSION: ${{ steps.version.outputs.version }}
+      run: |
+        docker build -t klerith/docker-graphql:$NEW_VERSION .
+        docker build -t klerith/docker-graphql:latest .
 
-      - name: Push Docker Image
-        env:
-          NEW_VERSION: ${{ steps.version.outputs.version }}
-        run: |
-          docker push delta27222/docker-graphql:$NEW_VERSION
-          docker push delta27222/docker-graphql
+    - name: Push Docker Image
+      env:
+        NEW_VERSION: ${{ steps.version.outputs.version }}
+      run: |
+        docker push klerith/docker-graphql:$NEW_VERSION
+        docker push klerith/docker-graphql:latest
