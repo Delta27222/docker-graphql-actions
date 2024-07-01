@@ -30,17 +30,20 @@ jobs:
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          NEW_VERSION: ${{ steps.version.outputs.version }}
         run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-          echo "New version is $NEW_VERSION"
 
-      # - name: Build Docker Image
-      #   run: |
-      #     docker build -t delta27222/docker-graphql:0.0.1 .
-      #     docker build -t delta27222/docker-graphql .
+      - name: Build Docker Image
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.version }}
 
-      # - name: Push Docker Image
-      #   run: |
-      #     docker push delta27222/docker-graphql:0.0.1
-      #     docker push delta27222/docker-graphql
+        run: |
+          docker build -t delta27222/docker-graphql:$NEW_VERSION .
+          docker build -t delta27222/docker-graphql .
+
+      - name: Push Docker Image
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          docker push delta27222/docker-graphql:$NEW_VERSION
+          docker push delta27222/docker-graphql
