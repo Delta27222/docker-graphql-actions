@@ -28,7 +28,9 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build -t delta27222/docker-graphql:0.0.1 .
+          docker build -t delta27222/docker-graphql .
 
       - name: Push Docker Image
         run: |
           docker push delta27222/docker-graphql:0.0.1
+          docker push delta27222/docker-graphql
