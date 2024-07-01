@@ -46,4 +46,4 @@ jobs:
         NEW_VERSION: ${{ steps.version.outputs.version }}
       run: |
         docker push delta27222/docker-graphql:$NEW_VERSION
-        docker push delta27222/docker-graphql:latest
+        docker push delta27222/docker-graphql:latest 
